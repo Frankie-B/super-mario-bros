@@ -1,0 +1,23 @@
+{
+  "name": "super-mario-bros",
+  "version": "1.0.0",
+  "description": "ode to one of my favourite childhood games, created using javascipt",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ./public",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frankie-B/super-mario-bros.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Frankie-B/super-mario-bros/issues"
+  },
+  "homepage": "https://github.com/Frankie-B/super-mario-bros#readme",
+  "dependencies": {
+    "serve": "^11.3.1"
+  }
+}
