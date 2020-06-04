@@ -15,14 +15,14 @@ export default class SpriteSheet {
       .getContext('2d')
       .drawImage(
         this.image,
-        y * this.height,
         x * this.width,
-        this.height,
+        y * this.height,
         this.width,
-        0,
-        0,
         this.height,
-        this.width
+        0,
+        0,
+        this.width,
+        this.height
       ); // draw subset of the image
     this.tiles.set(name, buffer);
   }
