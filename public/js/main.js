@@ -9,11 +9,13 @@ function loadImage(url) {
   });
 }
 
+// sprite API
 class spriteSheet {
   constructor(image, height, width) {
     this.image = image;
     this.height = height;
     this.width = width;
+    this.tiles = new Map();
   }
 
   define(name, x, y) {
@@ -33,6 +35,12 @@ class spriteSheet {
         this.height,
         this.width
       ); // draw subset of the image
+    this.tiles.set(name, buffer);
+  }
+
+  draw(name, context, x, y) {
+    const buffer = this.tiles.get(name);
+    context.drawImage(buffer, x, y);
   }
 }
 
