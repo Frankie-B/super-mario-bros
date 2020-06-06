@@ -3,19 +3,10 @@ import Entity from './Entity.js';
 import { loadLevel } from './loaders.js';
 import { createMario } from './entities.js';
 import { loadBackgroundSprites } from './sprites.js';
-import { createBackgroundLayer } from './layers.js';
+import { createBackgroundLayer, createSpriteLayer } from './layers.js';
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
-
-function createSpriteLayer(entity) {
-  return function drawSpriteLayer(context) {
-    for (let i = 0; i < 20; i++) {
-      // sprite.draw('idle', context, pos.x + i * 16, pos.y);
-      entity.draw(context);
-    }
-  };
-}
 
 Promise.all([createMario(), loadBackgroundSprites(), loadLevel('1-1')]).then(
   ([mario, backgroundSprites, level]) => {
@@ -25,20 +16,38 @@ Promise.all([createMario(), loadBackgroundSprites(), loadLevel('1-1')]).then(
       backgroundSprites
     );
 
-    comp.layers.push(backgroundLayer);
+    // comp.layers.push(backgroundLayer);
 
-    const gravity = 0.5;
+    const gravity = 30;
+    mario.pos.set(64, 180);
+    mario.velocity.set(200, -600);
 
     const spriteLayer = createSpriteLayer(mario);
     comp.layers.push(spriteLayer);
 
-    function updatePos() {
-      comp.draw(context);
-      mario.update();
-      mario.velocity.y += gravity;
-      requestAnimationFrame(updatePos);
+    const deltaTime = 1 / 60;
+    // accumulator pattern for time
+    let accumulatedTime = 0;
+    let lastTime = 0;
+
+    function updatePos(time) {
+      accumulatedTime += (time - lastTime) / 1000;
+
+      while (accumulatedTime > deltaTime) {
+        comp.draw(context);
+        mario.update(deltaTime);
+        console.log(mario.pos);
+        mario.velocity.y += gravity;
+
+        accumulatedTime -= deltaTime;
+      }
+      // requestAnimationFrame(updatePos);
+
+      setTimeout(updatePos, 1000 / 60, performance.now());
+
+      lastTime = time;
     }
 
-    updatePos();
+    updatePos(0);
   }
 );
