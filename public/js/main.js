@@ -52,17 +52,19 @@ Promise.all([
   mario.pos.set(64, 180);
   mario.velocity.set(2, -10);
 
-  // const pos = new Vec2(64, 180);
+  mario.draw = function drawMario(params) {};
 
-  // const velocity = new Vec2(2, -10);
+  mario.update = function updateMario(params) {
+    this.pos.x += this.velocity.x;
+    this.pos.y += this.velocity.y;
+  };
 
   const spriteLayer = createSpriteLayer(marioSprite, mario.pos);
   comp.layers.push(spriteLayer);
 
   function updatePos() {
     comp.draw(context);
-    mario.pos.x += mario.velocity.x;
-    mario.pos.y += mario.velocity.y;
+    mario.update();
     mario.velocity.y += gravity;
     requestAnimationFrame(updatePos);
   }
