@@ -23,5 +23,17 @@ Promise.all([
   level.backgrounds.forEach((background) => {
     drawBackground(background, context, sprites);
   });
-  marioSprite.draw('idle', context, 64, 64);
+
+  const pos = {
+    x: 64,
+    y: 64,
+  };
+  function updatePos() {
+    marioSprite.draw('idle', context, pos.x, pos.y);
+    pos.x += 2;
+    pos.y += 2;
+    requestAnimationFrame(updatePos);
+  }
+
+  updatePos();
 });
