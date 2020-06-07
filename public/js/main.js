@@ -4,6 +4,14 @@ import { loadLevel } from './loaders.js';
 import { createMario } from './entities.js';
 import { loadBackgroundSprites } from './sprites.js';
 import { createBackgroundLayer, createSpriteLayer } from './layers.js';
+import Keyboard from './KeyboardState.js';
+
+const input = new Keyboard();
+input.addMapping(32, (keyState) => {
+  console.log(keyState);
+});
+
+input.listenTo(window);
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -28,8 +36,8 @@ Promise.all([createMario(), loadBackgroundSprites(), loadLevel('1-1')]).then(
     const timer = new Timer(1 / 60);
 
     timer.update = function updatePos(deltaTime) {
-      comp.draw(context);
       mario.update(deltaTime);
+      comp.draw(context);
       mario.velocity.y += gravity * deltaTime;
     };
 
