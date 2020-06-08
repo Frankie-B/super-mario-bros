@@ -37,10 +37,7 @@ export function loadLevel(name) {
 
     createTiles(level, levelSpec.backgrounds);
 
-    const backgroundLayer = createBackgroundLayer(
-      levelSpec.backgrounds,
-      backgroundSprites
-    );
+    const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
 
     level.comp.layers.push(backgroundLayer);
 
