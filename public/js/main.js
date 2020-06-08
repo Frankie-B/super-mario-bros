@@ -21,7 +21,6 @@ Promise.all([createMario(), loadBackgroundSprites(), loadLevel('1-1')]).then(
 
     const gravity = 2000;
     mario.pos.set(64, 180);
-    mario.vel.set(200, -600);
 
     const SPACE = 32;
 
