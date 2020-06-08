@@ -23,11 +23,10 @@ export function createBackgroundLayer(backgrounds, sprites) {
   };
 }
 
-export function createSpriteLayer(entity) {
+export function createSpriteLayer(entities) {
   return function drawSpriteLayer(context) {
-    for (let i = 0; i < 20; i++) {
-      // sprite.draw('idle', context, pos.x + i * 16, pos.y);
+    entities.forEach((entity) => {
       entity.draw(context);
-    }
+    });
   };
 }
