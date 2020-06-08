@@ -13,6 +13,20 @@ export function loadImage(url) {
   });
 }
 
+export function createTiles(level, backgrounds) {
+  backgrounds.forEach((background) => {
+    background.ranges.forEach(([x1, x2, y1, y2]) => {
+      for (let x = x1; x < x2; x++) {
+        for (let y = y1; y < y2; y++) {
+          level.tiles.set(x, y, {
+            name: background.tile,
+          });
+        }
+      }
+    });
+  });
+}
+
 export function loadLevel(name) {
   return Promise.all([
     fetch(`/levels/${name}.json`).then((r) => r.json()),
@@ -20,6 +34,9 @@ export function loadLevel(name) {
     loadBackgroundSprites(),
   ]).then(([levelSpec, backgroundSprites]) => {
     const level = new Level();
+
+    createTiles(level, levelSpec.backgrounds);
+
     const backgroundLayer = createBackgroundLayer(
       levelSpec.backgrounds,
       backgroundSprites
@@ -29,6 +46,8 @@ export function loadLevel(name) {
 
     const spriteLayer = createSpriteLayer(level.entities);
     level.comp.layers.push(spriteLayer);
+
+    console.table(level.tiles.grid);
 
     return level;
   });
