@@ -3,6 +3,14 @@ export class Matrix {
     this.grid = [];
   }
 
+  forEach(callback) {
+    this.grid.forEach((column, x) => {
+      column.forEach((tile, y) => {
+        callback(tile, x, y);
+      });
+    });
+  }
+
   get(x, y) {
     const col = this.grid[x];
     if (col) {
