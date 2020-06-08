@@ -5,4 +5,10 @@ export default class Level {
     this.comp = new Compositor();
     this.entities = new Set();
   }
+
+  update(deltaTine) {
+    this.entities.forEach((entity) => {
+      entity.update(deltaTine);
+    });
+  }
 }

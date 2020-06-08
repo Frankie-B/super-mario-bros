@@ -8,11 +8,14 @@ const context = canvas.getContext('2d');
 
 Promise.all([createMario(), loadLevel('1-1')]).then(([mario, level]) => {
   const gravity = 2000;
-  mario.pos.set(64, 180);
+  mario.pos.set(64, 64);
+
+  level.entities.add(mario);
 
   const SPACE = 32;
 
   const input = new Keyboard();
+
   input.addMapping(SPACE, (keyState) => {
     if (keyState) {
       mario.jump.start();
@@ -27,8 +30,10 @@ Promise.all([createMario(), loadLevel('1-1')]).then(([mario, level]) => {
   const timer = new Timer(1 / 60);
 
   timer.update = function updatePos(deltaTime) {
-    mario.update(deltaTime);
+    level.update(deltaTime);
+
     level.comp.draw(context);
+
     mario.vel.y += gravity * deltaTime;
   };
 
