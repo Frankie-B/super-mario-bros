@@ -29,6 +29,16 @@ Promise.all([createMario(), loadLevel('1-1')]).then(([mario, level]) => {
     console.log(keyState);
   });
 
+  input.addMapping(39, (keyState) => {
+    console.log(keyState);
+    mario.go.dir = keyState;
+  });
+
+  input.addMapping(37, (keyState) => {
+    console.log(keyState);
+    mario.go.dir = -keyState;
+  });
+
   input.listenTo(window);
 
   // Debug utility
