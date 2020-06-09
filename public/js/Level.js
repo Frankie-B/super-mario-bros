@@ -4,6 +4,7 @@ import { Matrix } from './math.js';
 
 export default class Level {
   constructor() {
+    this.gravity = 2000;
     this.comp = new Compositor();
     this.entities = new Set();
     this.tiles = new Matrix();
@@ -20,6 +21,8 @@ export default class Level {
 
       entity.pos.y += entity.vel.y * deltaTine;
       this.tileCollider.checkY(entity);
+
+      entity.vel.y += this.gravity * deltaTine;
     });
   }
 }
