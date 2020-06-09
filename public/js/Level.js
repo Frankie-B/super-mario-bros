@@ -15,7 +15,11 @@ export default class Level {
     this.entities.forEach((entity) => {
       entity.update(deltaTine);
 
-      this.tileCollider.test(entity);
+      entity.pos.x += entity.vel.x * deltaTine;
+      this.tileCollider.checkX(entity);
+
+      entity.pos.y += entity.vel.y * deltaTine;
+      this.tileCollider.checkY(entity);
     });
   }
 }
