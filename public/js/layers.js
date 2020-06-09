@@ -29,6 +29,7 @@ export function createCollisionLayer(level) {
 
   const getByIndexOriginal = tileResolver.getByIndex;
   tileResolver.getByIndex = function getByIndexFake(x, y) {
+    // console.log(x, y);
     resolvedTiles.push({ x, y });
     return getByIndexOriginal.call(tileResolver, x, y);
   };
@@ -40,7 +41,6 @@ export function createCollisionLayer(level) {
       context.rect(x * tileSize, y * tileSize, tileSize, tileSize);
       context.stroke();
     });
-
     resolvedTiles.length = 0;
   };
 }
