@@ -34,6 +34,7 @@ export function createCollisionLayer(level) {
     return getByIndexOriginal.call(tileResolver, x, y);
   };
 
+  // Function spy for debugging mario collision position
   return function drawCollision(context) {
     context.strokeStyle = 'blue';
     resolvedTiles.forEach(({ x, y }) => {
