@@ -14,32 +14,58 @@ export function createBackgroundLayer(level, sprites) {
   };
 }
 
-export function createSpriteLayer(entities) {
-  return function drawSpriteLayer(context) {
+export function createSpriteLayer(entities, width = 64, height = 64) {
+  const spriteBuffer = document.createElement('canvas');
+
+  spriteBuffer.width = width;
+
+  spriteBuffer.height = height;
+
+  const spriteBufferContext = spriteBuffer.getContext('2d');
+
+  return function drawSpriteLayer(context, camera) {
     entities.forEach((entity) => {
-      entity.draw(context);
+      spriteBufferContext.clearRect(0, 0, width, height);
+
+      entity.draw(spriteBufferContext);
+
+      entity.drawImage(
+        spriteBuffer,
+        entity.pos.x - camera.pos.x,
+        entity.pos.y - camera.pos.y
+      );
     });
   };
 }
 
 export function createCollisionLayer(level) {
   const resolvedTiles = [];
+
   const tileResolver = level.tileCollider.tiles;
+
   const tileSize = tileResolver.tileSize;
 
   const getByIndexOriginal = tileResolver.getByIndex;
+
   tileResolver.getByIndex = function getByIndexFake(x, y) {
-    // console.log(x, y);
     resolvedTiles.push({ x, y });
+
     return getByIndexOriginal.call(tileResolver, x, y);
   };
 
   // Function spy for debugging mario collision position
-  return function drawCollision(context) {
+  return function drawCollision(context, camera) {
     context.strokeStyle = 'blue';
     resolvedTiles.forEach(({ x, y }) => {
       context.beginPath();
-      context.rect(x * tileSize, y * tileSize, tileSize, tileSize);
+
+      context.rect(
+        x * tileSize - camera.pos.x,
+        y * tileSize - camera.pos.y,
+        tileSize,
+        tileSize
+      );
+
       context.stroke();
     });
 
@@ -47,7 +73,14 @@ export function createCollisionLayer(level) {
 
     level.entities.forEach((entity) => {
       context.beginPath();
-      context.rect(entity.pos.x, entity.pos.y, entity.size.x, entity.size.y);
+
+      context.rect(
+        entity.pos.x - camera.pos.x,
+        entity.pos.y - camera.pos.y,
+        entity.size.x,
+        entity.size.y
+      );
+
       context.stroke();
     });
     resolvedTiles.length = 0;
