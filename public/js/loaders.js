@@ -62,22 +62,22 @@ function loadSpriteSheet(name) {
 }
 
 export function loadLevel(name) {
-  return Promise.all([
-    loadJSON(`/levels/${name}.json`),
+  return loadJSON(`/levels/${name}.json`)
+    .then((levelSpec) =>
+      Promise.all([levelSpec, loadSpriteSheet(levelSpec.spriteSheet)])
+    )
+    .then(([levelSpec, backgroundSprites]) => {
+      const level = new Level();
 
-    loadSpriteSheet('overworld'),
-  ]).then(([levelSpec, backgroundSprites]) => {
-    const level = new Level();
+      createTiles(level, levelSpec.backgrounds);
 
-    createTiles(level, levelSpec.backgrounds);
+      const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
 
-    const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
+      level.comp.layers.push(backgroundLayer);
 
-    level.comp.layers.push(backgroundLayer);
+      const spriteLayer = createSpriteLayer(level.entities);
+      level.comp.layers.push(spriteLayer);
 
-    const spriteLayer = createSpriteLayer(level.entities);
-    level.comp.layers.push(spriteLayer);
-
-    return level;
-  });
+      return level;
+    });
 }
