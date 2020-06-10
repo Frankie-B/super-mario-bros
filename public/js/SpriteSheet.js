@@ -1,19 +1,19 @@
 // sprite API
 export default class SpriteSheet {
-  constructor(image, height, width) {
+  constructor(image, width, height) {
     this.image = image;
-    this.height = height;
     this.width = width;
+    this.height = height;
     this.tiles = new Map();
   }
 
   define(name, x, y, width, height) {
-    const buffer = document.createElement('canvas'); // buffer to store image from tile
+    const buffer = document.createElement('canvas');
     buffer.width = width;
     buffer.height = height;
     buffer
       .getContext('2d')
-      .drawImage(this.image, x, y, width, height, 0, 0, width, height); // draw subset of the image
+      .drawImage(this.image, x, y, width, height, 0, 0, width, height);
     this.tiles.set(name, buffer);
   }
 
