@@ -15,9 +15,11 @@ export function loadImage(url) {
 
 export function createTiles(level, backgrounds) {
   backgrounds.forEach((background) => {
-    background.ranges.forEach(([x1, x2, y1, y2]) => {
-      for (let x = x1; x < x2; x++) {
-        for (let y = y1; y < y2; y++) {
+    background.ranges.forEach(([xStart, xLength, yStart, yLength]) => {
+      const xEnd = xStart + xLength;
+      const yEnd = yStart + yLength;
+      for (let x = xStart; x < xEnd; x++) {
+        for (let y = yStart; y < yEnd; y++) {
           level.tiles.set(x, y, {
             name: background.tile,
           });
