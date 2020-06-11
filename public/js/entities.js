@@ -13,8 +13,15 @@ export function createMario() {
 
     mario.addTrait(new Jump());
 
+    const frames = ['run-1', 'run-2', 'run-3'];
+
     // mario frame router
     function routeFrame(mario) {
+      if (mario.go.dir !== 0) {
+        const frameIndex = Math.floor(mario.go.distance / 10) % frames.length;
+        const frameName = (frameIndex, frames[frameIndex]);
+        return frameName;
+      }
       return 'idle';
     }
 
