@@ -19,6 +19,5 @@ export default class Go extends Trait {
     } else {
       this.distance = 0;
     }
-    console.log('Heading...', this.heading);
   }
 }

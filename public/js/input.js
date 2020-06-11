@@ -9,16 +9,13 @@ export function setupKeyboard(entity) {
     } else {
       entity.jump.cancel();
     }
-    console.log(keyState);
   });
 
   input.addMapping('ArrowRight', (keyState) => {
-    console.log(keyState);
     entity.go.dir = keyState;
   });
 
   input.addMapping('ArrowLeft', (keyState) => {
-    console.log(keyState);
     entity.go.dir = -keyState;
   });
 
