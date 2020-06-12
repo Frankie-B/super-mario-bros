@@ -18,7 +18,7 @@ export function createMario() {
 
     // mario frame router
     function routeFrame(mario) {
-      if (mario.go.dir !== 0) {
+      if (mario.go.distance > 0) {
         return runAnim(mario.go.distance);
       }
       return 'idle';
