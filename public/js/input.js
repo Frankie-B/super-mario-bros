@@ -1,25 +1,30 @@
 import Keyboard from './KeyboardState.js';
 
-export function setupKeyboard(entity) {
+export function setupKeyboard(mario) {
   const input = new Keyboard();
 
   input.addMapping('Space', (keyState) => {
-    // alternative jump key - keyP
+    // (represents the A button) alternative jump key - KeyP
     if (keyState) {
-      entity.jump.start();
+      mario.jump.start();
     } else {
-      entity.jump.cancel();
+      mario.jump.cancel();
     }
   });
 
+  input.addMapping('KeyF', (keyState) => {
+    // (represents the B button)alternative - KeyO
+    mario.turbo(keyState);
+  });
+
   input.addMapping('ArrowRight', (keyState) => {
-    // alternative - keyD
-    entity.go.dir += keyState ? 1 : -1;
+    // alternative - KeyD
+    mario.go.dir += keyState ? 1 : -1;
   });
 
   input.addMapping('ArrowLeft', (keyState) => {
-    // alternative - keyA
-    entity.go.dir += keyState ? -1 : 1;
+    // alternative - KeyA
+    mario.go.dir += keyState ? -1 : 1;
   });
 
   return input;
