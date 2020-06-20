@@ -21,7 +21,7 @@ export default class Level {
 
   update(deltaTine) {
     this.entities.forEach((entity) => {
-      entity.update(deltaTine);
+      entity.update(deltaTine, this);
 
       entity.pos.x += entity.vel.x * deltaTine;
       this.tileCollider.checkX(entity);
@@ -29,10 +29,13 @@ export default class Level {
       entity.pos.y += entity.vel.y * deltaTine;
       this.tileCollider.checkY(entity);
 
-      this.entityCollider.check(entity);
-
       entity.vel.y += this.gravity * deltaTine;
     });
+
+    this.entities.forEach((entity) => {
+      this.entityCollider.check(entity);
+    });
+
     this.totalTime += deltaTine;
   }
 }
