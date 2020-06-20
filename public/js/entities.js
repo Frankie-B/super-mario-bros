@@ -3,5 +3,15 @@ import { loadGoomba } from './entities/Goomba.js';
 import { loadKoopa } from './entities/Koopa.js';
 
 export function loadEntities() {
-  return Promise.all([loadMario(), loadGoomba(), loadKoopa()]);
+  const entityfactories = {};
+
+  function addAs(name) {
+    return (factory) => (entityfactories[name] = factory);
+  }
+
+  return Promise.all([
+    loadMario().then(addAs('mario')),
+    loadGoomba().then(addAs('goomba')),
+    loadKoopa().then(addAs('koopa')),
+  ]).then(() => entityfactories);
 }
