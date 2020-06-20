@@ -48,6 +48,8 @@ export default class Entity {
     });
   }
 
+  draw() {}
+
   update(deltaTime, level) {
     this.traits.forEach((trait) => {
       trait.update(this, deltaTime, level);
