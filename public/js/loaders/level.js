@@ -3,6 +3,34 @@ import Level from '../Level.js';
 import { createBackgroundLayer, createSpriteLayer } from '../layers.js';
 import { loadJSON, loadSpriteSheet } from '../loaders.js';
 
+function setUpCollision(levelSpec, level) {
+  const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
+    return mergedTiles.concat(layerSpec.tiles);
+  }, []);
+  const collisionGrid = createCollisionGrid(mergedTiles, levelSpec.patterns);
+  level.setCollisionGrid(collisionGrid);
+}
+
+function setUpBackgrounds(levelSpec, level, backgroundSprites) {
+  levelSpec.layers.forEach((layer) => {
+    const backgroundGrid = createBackgroundGrid(
+      layer.tiles,
+      levelSpec.patterns
+    );
+    const backgroundLayer = createBackgroundLayer(
+      level,
+      backgroundGrid,
+      backgroundSprites
+    );
+    level.comp.layers.push(backgroundLayer);
+  });
+}
+
+function setUpEntities(levelSpec, level) {
+  const spriteLayer = createSpriteLayer(level.entities);
+  level.comp.layers.push(spriteLayer);
+}
+
 export function loadLevel(name) {
   return loadJSON(`/levels/${name}.json`)
     .then((levelSpec) =>
@@ -11,30 +39,9 @@ export function loadLevel(name) {
     .then(([levelSpec, backgroundSprites]) => {
       const level = new Level();
 
-      const mergedTiles = levelSpec.layers.reduce((mergedTiles, layerSpec) => {
-        return mergedTiles.concat(layerSpec.tiles);
-      }, []);
-      const collisionGrid = createCollisionGrid(
-        mergedTiles,
-        levelSpec.patterns
-      );
-      level.setCollisionGrid(collisionGrid);
-
-      levelSpec.layers.forEach((layer) => {
-        const backgroundGrid = createBackgroundGrid(
-          layer.tiles,
-          levelSpec.patterns
-        );
-        const backgroundLayer = createBackgroundLayer(
-          level,
-          backgroundGrid,
-          backgroundSprites
-        );
-        level.comp.layers.push(backgroundLayer);
-      });
-
-      const spriteLayer = createSpriteLayer(level.entities);
-      level.comp.layers.push(spriteLayer);
+      setUpCollision(levelSpec, level);
+      setUpBackgrounds(levelSpec, level, backgroundSprites);
+      setUpEntities(levelSpec, level);
 
       return level;
     });
