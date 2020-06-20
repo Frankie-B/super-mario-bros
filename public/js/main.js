@@ -19,16 +19,6 @@ async function main(canvas) {
   const mario = entityFactory.mario();
   mario.pos.set(64, 64);
 
-  const goomba = entityFactory.goomba();
-  goomba.pos.x = 220;
-
-  level.entities.add(goomba);
-
-  const koopa = entityFactory.koopa();
-  koopa.pos.x = 260;
-
-  level.entities.add(koopa);
-
   level.entities.add(mario);
 
   const input = setupKeyboard(mario);
