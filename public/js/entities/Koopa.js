@@ -7,8 +7,6 @@ export function loadKoopa() {
 }
 
 function createKoopaFactory(sprite) {
-  console.log(sprite);
-
   const walkAnim = sprite.animations.get('walk');
 
   function drawKoopa(context) {

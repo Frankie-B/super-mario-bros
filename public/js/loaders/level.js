@@ -26,25 +26,29 @@ function setUpBackgrounds(levelSpec, level, backgroundSprites) {
   });
 }
 
-function setUpEntities(levelSpec, level) {
+function setUpEntities(levelSpec, level, entityFactory) {
+  console.log(levelSpec.entities, entityFactory);
+
   const spriteLayer = createSpriteLayer(level.entities);
   level.comp.layers.push(spriteLayer);
 }
 
-export function loadLevel(name) {
-  return loadJSON(`/levels/${name}.json`)
-    .then((levelSpec) =>
-      Promise.all([levelSpec, loadSpriteSheet(levelSpec.spriteSheet)])
-    )
-    .then(([levelSpec, backgroundSprites]) => {
-      const level = new Level();
+export function createLevelLoader(entityFactory) {
+  return function loadLevel(name) {
+    return loadJSON(`/levels/${name}.json`)
+      .then((levelSpec) =>
+        Promise.all([levelSpec, loadSpriteSheet(levelSpec.spriteSheet)])
+      )
+      .then(([levelSpec, backgroundSprites]) => {
+        const level = new Level();
 
-      setUpCollision(levelSpec, level);
-      setUpBackgrounds(levelSpec, level, backgroundSprites);
-      setUpEntities(levelSpec, level);
+        setUpCollision(levelSpec, level);
+        setUpBackgrounds(levelSpec, level, backgroundSprites);
+        setUpEntities(levelSpec, level, entityFactory);
 
-      return level;
-    });
+        return level;
+      });
+  };
 }
 
 function createCollisionGrid(tiles, patterns) {
@@ -92,16 +96,12 @@ function expandRange(range) {
 
 function* expandRanges(ranges) {
   for (const range of ranges) {
-    for (const item of expandRange(range)) {
-      yield item;
-    }
+    yield* expandRange(range);
   }
 }
 
-function expandTiles(tiles, patterns) {
-  const expandedTiles = [];
-
-  function walkTiles(tiles, offsetX, offsetY) {
+function* expandTiles(tiles, patterns) {
+  function* walkTiles(tiles, offsetX, offsetY) {
     for (const tile of tiles) {
       for (const { x, y } of expandRanges(tile.ranges)) {
         const derivedX = x + offsetX;
@@ -109,19 +109,17 @@ function expandTiles(tiles, patterns) {
 
         if (tile.pattern) {
           const tiles = patterns[tile.pattern].tiles;
-          walkTiles(tiles, derivedX, derivedY);
+          yield* walkTiles(tiles, derivedX, derivedY);
         } else {
-          expandedTiles.push({
+          yield {
             tile,
             x: derivedX,
             y: derivedY,
-          });
+          };
         }
       }
     }
   }
 
-  walkTiles(tiles, 0, 0);
-
-  return expandedTiles;
+  yield* walkTiles(tiles, 0, 0);
 }
