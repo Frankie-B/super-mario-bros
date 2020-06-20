@@ -2,34 +2,42 @@ import Camera from './Camera.js';
 import Timer from './Timer.js';
 import { loadLevel } from './loaders/level.js';
 import { loadMario } from './entities/Mario.js';
+import { loadGoomba } from './entities/Goomba.js';
 import { setupKeyboard } from './input.js';
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 
-Promise.all([loadMario(), loadLevel('1-1')]).then(([createMario, level]) => {
-  const camera = new Camera();
+Promise.all([loadMario(), loadGoomba(), loadLevel('1-1')]).then(
+  ([createMario, createGoomba, level]) => {
+    const camera = new Camera();
 
-  const mario = createMario();
-  mario.pos.set(64, 64);
+    const mario = createMario();
+    mario.pos.set(64, 64);
 
-  level.entities.add(mario);
+    const goomba = createGoomba();
+    goomba.pos.x = 220;
 
-  const input = setupKeyboard(mario);
+    level.entities.add(goomba);
 
-  input.listenTo(window);
+    level.entities.add(mario);
 
-  const timer = new Timer(1 / 60);
+    const input = setupKeyboard(mario);
 
-  timer.update = function updatePos(deltaTime) {
-    level.update(deltaTime);
+    input.listenTo(window);
 
-    if (mario.pos.x > 100) {
-      camera.pos.x = mario.pos.x - 100;
-    }
+    const timer = new Timer(1 / 60);
 
-    level.comp.draw(context, camera);
-  };
+    timer.update = function updatePos(deltaTime) {
+      level.update(deltaTime);
 
-  timer.start();
-});
+      if (mario.pos.x > 100) {
+        camera.pos.x = mario.pos.x - 100;
+      }
+
+      level.comp.draw(context, camera);
+    };
+
+    timer.start();
+  }
+);
