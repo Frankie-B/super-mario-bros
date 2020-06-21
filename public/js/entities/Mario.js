@@ -53,6 +53,7 @@ function createMarioFactory(sprite) {
 
     mario.turbo = setTurboState;
     mario.draw = drawMario;
+
     mario.turbo(false);
 
     return mario;
