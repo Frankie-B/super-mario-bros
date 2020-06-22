@@ -14,6 +14,11 @@
     }
   ],
   "animations": [
-    { "name": "walk", "frameLen": 0.15, "frames": ["walk-1", "walk-2"] }
+    { "name": "walk", "frameLen": 0.15, "frames": ["walk-1", "walk-2"] },
+    {
+      "name": "wake",
+      "frameLen": 0.15,
+      "frames": ["hiding-with-legs", "hiding"]
+    }
   ]
 }
