@@ -11,7 +11,7 @@ class Font {
   }
 
   print(text, context, x, y) {
-    [...text].forEach((char, pos) => {
+    [...text.toUpperCase()].forEach((char, pos) => {
       this.sprites.draw(char, context, x + pos * this.size, y);
     });
   }
@@ -26,7 +26,6 @@ export function loadFont() {
     for (let [index, char] of [...CHARS].entries()) {
       const x = (index * size) % rowLen;
       const y = Math.floor((index * size) / rowLen) * size;
-
       fontSprite.define(char, x, y, size, size);
     }
 

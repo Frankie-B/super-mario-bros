@@ -22,6 +22,7 @@ async function main(canvas) {
   const context = canvas.getContext('2d');
 
   const [entityFactory, font] = await Promise.all([loadEntities(), loadFont()]);
+
   const loadLevel = await createLevelLoader(entityFactory);
 
   const level = await loadLevel('1-1');
