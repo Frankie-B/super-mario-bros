@@ -2,6 +2,7 @@ import Camera from './Camera.js';
 import Entity from './Entity.js';
 import PlayerController from './traits/PlayerController.js';
 import Timer from './Timer.js';
+import { createAudioLoader } from './loaders/audio.js';
 import { createLevelLoader } from './loaders/level.js';
 import { loadFont } from './loaders/font.js';
 import { loadEntities } from './entities.js';
@@ -18,12 +19,38 @@ function createPlayerEnv(playerEntity) {
   return playerEnv;
 }
 
+class AudioBoard {
+  constructor(context) {
+    this.context = context;
+    this.buffers = new Map();
+  }
+
+  addAudio(name, buffer) {
+    this.buffers.set(name, buffer);
+  }
+
+  playAudio(name) {
+    const source = this.context.createBufferSource();
+    source.connect(this.context.destination);
+    source.buffer = this.buffers.get(name);
+    source.start(0);
+  }
+}
+
 async function main(canvas) {
   const context = canvas.getContext('2d');
 
   const [entityFactory, font] = await Promise.all([loadEntities(), loadFont()]);
 
   const loadLevel = await createLevelLoader(entityFactory);
+
+  const audioContext = new AudioContext();
+  const audioBoard = new AudioBoard(audioContext);
+  const loadAudio = createAudioLoader(audioContext);
+  loadAudio('/audio/jump.ogg').then((buffer) => {
+    audioBoard.addAudio('jump', buffer);
+    audioBoard.playAudio('jump');
+  });
 
   const level = await loadLevel('1-1');
 
@@ -53,4 +80,10 @@ async function main(canvas) {
 }
 
 const canvas = document.getElementById('screen');
-main(canvas);
+
+const start = () => {
+  window.removeEventListener('click', start);
+  main(canvas);
+};
+
+window.addEventListener('click', start);
