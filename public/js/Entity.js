@@ -70,8 +70,8 @@ export default class Entity {
 
   update(gameContext, level) {
     this.traits.forEach((trait) => {
-      trait.update(this, deltaTime, level, audioBoard);
+      trait.update(this, gameContext, level);
     });
-    this.lifetime += deltaTime;
+    this.lifetime += gameContext.deltaTime;
   }
 }
