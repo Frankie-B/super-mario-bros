@@ -13,8 +13,9 @@ export default class Go extends Trait {
     this.heading = 1;
   }
 
-  update(entity, deltaTime) {
+  update(entity, { deltaTime }) {
     const absX = Math.abs(entity.vel.x);
+
     if (this.dir !== 0) {
       entity.vel.x += this.acceleration * deltaTime * this.dir;
 
@@ -31,6 +32,7 @@ export default class Go extends Trait {
     } else {
       this.distance = 0;
     }
+
     const drag = this.dragFactor * entity.vel.x * absX;
     entity.vel.x -= drag;
     this.distance += absX * deltaTime;
