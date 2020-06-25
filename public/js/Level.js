@@ -31,6 +31,6 @@ export default class Level {
       entity.finalize();
     });
 
-    this.totalTime += deltaTime;
+    this.totalTime += gameContext.deltaTime;
   }
 }

@@ -33,13 +33,14 @@ export default class Jump extends Trait {
     }
   }
 
-  update(entity, { deltaTime, audioBoard }) {
+  update(entity, { deltaTime }) {
     if (this.requestTime > 0) {
       if (this.ready > 0) {
-        audioBoard.playAudio('jump');
+        this.sounds.add('jump');
         this.engageTime = this.duration;
         this.requestTime = 0;
       }
+
       this.requestTime -= deltaTime;
     }
 
@@ -50,6 +51,7 @@ export default class Jump extends Trait {
       );
       this.engageTime -= deltaTime;
     }
+
     this.ready--;
   }
 }
