@@ -5,12 +5,14 @@ import Solid from '../traits/Solid.js';
 import Physics from '../traits/Physics.js';
 import Stomper from '../traits/Stomper.js';
 import Jump from '../traits/Jump.js';
+import { loadAudioBoard } from '../loaders/audio.js';
 import { loadSpriteSheet } from '../loaders.js';
 
 const SLOW_DRAG = 1 / 1000;
 const FAST_DRAG = 1 / 5000;
 
-export function loadMario() {
+export function loadMario(audioContext) {
+  loadAudioBoard('mario', audioContext);
   return loadSpriteSheet('mario').then(createMarioFactory);
 }
 
