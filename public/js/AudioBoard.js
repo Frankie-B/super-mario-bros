@@ -7,9 +7,9 @@ export default class AudioBoard {
     this.buffers.set(name, buffer);
   }
 
-  playAudio(name, context) {
-    const source = context.createBufferSource();
-    source.connect(context.destination);
+  playAudio(name, audioContext) {
+    const source = audioContext.createBufferSource();
+    source.connect(audioContext.destination);
     source.buffer = this.buffers.get(name);
     source.start(0);
   }

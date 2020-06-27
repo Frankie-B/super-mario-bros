@@ -10,6 +10,7 @@ export function loadAudioBoard(name, audioContext) {
       Object.keys(fx).map((name) => {
         return loadAudio(fx[name].url).then((buffer) => {
           audioBoard.addAudio(name, buffer);
+          console.log(audioBoard);
         });
       })
     ).then(() => {

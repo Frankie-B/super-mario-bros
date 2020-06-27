@@ -12,11 +12,17 @@ const SLOW_DRAG = 1 / 1000;
 const FAST_DRAG = 1 / 5000;
 
 export function loadMario(audioContext) {
-  loadAudioBoard('mario', audioContext);
-  return loadSpriteSheet('mario').then(createMarioFactory);
+  return Promise.all([
+    loadSpriteSheet('mario'),
+    loadAudioBoard('mario', audioContext),
+  ]).then(([sprite, audio]) => {
+    return createMarioFactory(sprite, audio);
+  });
 }
 
-function createMarioFactory(sprite) {
+function createMarioFactory(sprite, audio) {
+  console.log('AudioBoard in factory', audio);
+
   const runAnim = sprite.animations.get('run');
 
   function routeFrame(mario) {
@@ -45,9 +51,10 @@ function createMarioFactory(sprite) {
 
   return function createMario() {
     const mario = new Entity();
+    mario.audio = audio;
+    mario.size.set(14, 16);
 
     mario.addTrait(new Physics());
-    mario.size.set(14, 16);
     mario.addTrait(new Solid());
     mario.addTrait(new Go());
     mario.addTrait(new Jump());
