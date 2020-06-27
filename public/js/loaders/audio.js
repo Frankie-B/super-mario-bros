@@ -1,28 +1,20 @@
-import { loadJSON } from '../loaders.js';
 import AudioBoard from '../AudioBoard.js';
-// const audioContext = new AudioContext();
-// const audioBoard = new AudioBoard(audioContext);
-// const loadAudio = createAudioLoader(audioContext);
-
-// loadAudio('/audio/jump.ogg').then((buffer) => {
-//   audioBoard.addAudio('jump', buffer);
-// });
-// loadAudio('/audio/jump.ogg').then((buffer) => {
-//   audioBoard.addAudio('stomp', buffer);
-// });
+import { loadJSON } from '../loaders.js';
 
 export function loadAudioBoard(name, audioContext) {
   const loadAudio = createAudioLoader(audioContext);
-  loadJSON(`/sounds/${name}.json`).then((audioSheet) => {
+  return loadJSON(`/sounds/${name}.json`).then((audioSheet) => {
     const audioBoard = new AudioBoard();
     const fx = audioSheet.fx;
-    Object.keys(fx).forEach((name) => {
-      const url = fx[name];
-      console.log(name, url);
+    return Promise.all(
+      Object.keys(fx).map((name) => {
+        return loadAudio(fx[name].url).then((buffer) => {
+          audioBoard.addAudio(name, buffer);
+        });
+      })
+    ).then(() => {
+      return audioBoard;
     });
-
-    console.log('load audioBoard context', audioContext);
-    console.log(audioSheet);
   });
 }
 
