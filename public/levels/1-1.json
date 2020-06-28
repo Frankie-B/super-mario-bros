@@ -289,6 +289,6 @@
       "name": "cannon",
       "pos": [96, 112]
     },
-    { "name": "bullet", "pos": [96, 32] }
+    { "name": "bullet", "pos": [0, 128] }
   ]
 }
