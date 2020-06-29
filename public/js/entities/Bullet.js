@@ -39,13 +39,12 @@ class Behavior extends Trait {
 
 function createBulletFactory(sprite) {
   function drawBullet(context) {
-    sprite.draw('bullet', context, 0, 0);
+    sprite.draw('bullet', context, 0, 0, this.vel.x < 0);
   }
 
   return function createGoomba() {
     const bullet = new Entity();
     bullet.size.set(16, 14);
-    bullet.vel.set(80, 0);
 
     bullet.addTrait(new Velocity());
     bullet.addTrait(new Behavior());

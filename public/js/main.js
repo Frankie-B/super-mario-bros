@@ -1,74 +1,65 @@
 import Camera from './Camera.js';
-import Entity from './Entity.js';
-import PlayerController from './traits/PlayerController.js';
 import Timer from './Timer.js';
-import { createLevelLoader } from './loaders/level.js';
-import { loadFont } from './loaders/font.js';
-import { loadEntities } from './entities.js';
-import { setupKeyboard } from './input.js';
-import { createCollisionLayer } from './layers/collision.js';
-import { createDashboardLayer } from './layers/dashboard.js';
+import {createLevelLoader} from './loaders/level.js';
+import {loadFont} from './loaders/font.js';
+import {loadEntities} from './entities.js';
+import {createPlayer, createPlayerEnv} from './player.js';
+import {setupKeyboard} from './input.js';
+import {createCollisionLayer} from './layers/collision.js';
+import {createDashboardLayer} from './layers/dashboard.js';
 
-function createPlayerEnv(playerEntity) {
-  const playerEnv = new Entity();
-  const playerControl = new PlayerController();
-
-  playerControl.checkpoint.set(64, 64);
-  playerControl.setPlayer(playerEntity);
-  playerEnv.addTrait(playerControl);
-
-  return playerEnv;
-}
 
 async function main(canvas) {
-  const context = canvas.getContext('2d');
-  const audioContext = new AudioContext();
+    const context = canvas.getContext('2d');
+    const audioContext = new AudioContext();
 
-  const [entityFactory, font] = await Promise.all([
-    loadEntities(audioContext),
-    loadFont(),
-  ]);
+    const [entityFactory, font] = await Promise.all([
+        loadEntities(audioContext),
+        loadFont(),
+    ]);
 
-  const loadLevel = await createLevelLoader(entityFactory);
 
-  const level = await loadLevel('1-1');
+    const loadLevel = await createLevelLoader(entityFactory);
 
-  const camera = new Camera();
+    const level = await loadLevel('1-1');
 
-  const mario = entityFactory.mario();
+    const camera = new Camera();
 
-  const playerEnv = createPlayerEnv(mario);
-  level.entities.add(playerEnv);
+    const mario = createPlayer(entityFactory.mario());
 
-  level.comp.layers.push(createCollisionLayer(level));
-  level.comp.layers.push(createDashboardLayer(font, playerEnv));
+    const playerEnv = createPlayerEnv(mario);
+    level.entities.add(playerEnv);
 
-  const input = setupKeyboard(mario);
-  input.listenTo(window);
 
-  const gameContext = {
-    audioContext,
-    deltaTime: null,
-  };
+    level.comp.layers.push(createCollisionLayer(level));
+    level.comp.layers.push(createDashboardLayer(font, playerEnv));
 
-  const timer = new Timer(1 / 60);
-  timer.update = function update(deltaTime) {
-    gameContext.deltaTime = deltaTime;
-    level.update(gameContext);
+    const input = setupKeyboard(mario);
+    input.listenTo(window);
 
-    camera.pos.x = Math.max(0, mario.pos.x - 100);
+    const gameContext = {
+        audioContext,
+        deltaTime: null,
+    };
 
-    level.comp.draw(context, camera);
-  };
+    const timer = new Timer(1/60);
+    timer.update = function update(deltaTime) {
+        gameContext.deltaTime = deltaTime;
+        level.update(gameContext);
 
-  timer.start();
+        camera.pos.x = Math.max(0, mario.pos.x - 100);
+
+        level.comp.draw(context, camera);
+    }
+
+    timer.start();
 }
 
 const canvas = document.getElementById('screen');
 
 const start = () => {
-  window.removeEventListener('click', start);
-  main(canvas);
+    window.removeEventListener('click', start);
+    main(canvas);
 };
 
 window.addEventListener('click', start);

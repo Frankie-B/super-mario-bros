@@ -4,7 +4,7 @@ export function setupKeyboard(mario) {
   const input = new Keyboard();
 
   input.addMapping('Space', (keyState) => {
-    // (represents the A button) alternative jump key - KeyP
+    // alternative key binding (A button) = 'KeyP'
     if (keyState) {
       mario.jump.start();
     } else {
@@ -13,17 +13,17 @@ export function setupKeyboard(mario) {
   });
 
   input.addMapping('KeyF', (keyState) => {
-    // (represents the B button)alternative - KeyO
+    // alternative key binding (B button) = KeyO
     mario.turbo(keyState);
   });
 
   input.addMapping('ArrowRight', (keyState) => {
-    // alternative - KeyD
+    // alternative key binding = KeyD
     mario.go.dir += keyState ? 1 : -1;
   });
 
   input.addMapping('ArrowLeft', (keyState) => {
-    // alternative - KeyA
+    // alternative key binding = KeyA
     mario.go.dir += keyState ? -1 : 1;
   });
 
