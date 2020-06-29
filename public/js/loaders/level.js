@@ -2,7 +2,9 @@ import { Matrix } from '../math.js';
 import Level from '../Level.js';
 import { createSpriteLayer } from '../layers/sprites.js';
 import { createBackgroundLayer } from '../layers/background.js';
-import { loadJSON, loadSpriteSheet } from '../loaders.js';
+import { loadMusicSheet } from './music.js';
+import { loadSpriteSheet } from './sprite.js';
+import { loadJSON } from '../loaders.js';
 
 function setupBackgrounds(levelSpec, level, backgroundSprites) {
   levelSpec.layers.forEach((layer) => {
@@ -33,7 +35,11 @@ export function createLevelLoader(entityFactory) {
   return function loadLevel(name) {
     return loadJSON(`/levels/${name}.json`)
       .then((levelSpec) =>
-        Promise.all([levelSpec, loadSpriteSheet(levelSpec.spriteSheet)])
+        Promise.all([
+          levelSpec,
+          loadSpriteSheet(levelSpec.spriteSheet),
+          loadMusicSheet(levelSpec.musicSheet),
+        ])
       )
       .then(([levelSpec, backgroundSprites]) => {
         const level = new Level();
