@@ -1,13 +1,19 @@
 import TileResolver from './TileResolver.js';
+import { brick } from './tiles/brick.js';
 import { ground } from './tiles/ground.js';
 
 const handlers = {
-  ground: ground,
+  brick,
+  ground,
 };
 
 export default class TileCollider {
-  constructor(tileMatrix) {
-    this.tiles = new TileResolver(tileMatrix);
+  constructor() {
+    this.resolvers = [];
+  }
+
+  addGrid(tileMatrix) {
+    this.resolvers.push(new TileResolver(tileMatrix));
   }
 
   checkX(entity) {
@@ -20,16 +26,18 @@ export default class TileCollider {
       return;
     }
 
-    const matches = this.tiles.searchByRange(
-      x,
-      x,
-      entity.bounds.top,
-      entity.bounds.bottom
-    );
+    for (const resolver of this.resolvers) {
+      const matches = resolver.searchByRange(
+        x,
+        x,
+        entity.bounds.top,
+        entity.bounds.bottom
+      );
 
-    matches.forEach((match) => {
-      this.handle(0, entity, match);
-    });
+      matches.forEach((match) => {
+        this.handle(0, entity, match);
+      });
+    }
   }
 
   checkY(entity) {
@@ -42,19 +50,21 @@ export default class TileCollider {
       return;
     }
 
-    const matches = this.tiles.searchByRange(
-      entity.bounds.left,
-      entity.bounds.right,
-      y,
-      y
-    );
+    for (const resolver of this.resolvers) {
+      const matches = resolver.searchByRange(
+        entity.bounds.left,
+        entity.bounds.right,
+        y,
+        y
+      );
 
-    matches.forEach((match) => {
-      this.handle(1, entity, match);
-    });
+      matches.forEach((match) => {
+        this.handle(1, entity, match);
+      });
+    }
   }
 
-  handle(index, entity, match) {
+  handle(index, entity, match, tiles) {
     const handler = handlers[match.tile.type];
     if (handler) {
       handler[index](entity, match);
