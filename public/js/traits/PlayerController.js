@@ -8,6 +8,15 @@ export default class PlayerController extends Trait {
     this.player = null;
     this.score = 0;
     this.time = 300;
+
+    this.listen('stomp', () => {
+      this.score += 100;
+      console.log('Score', this.score);
+    });
+  }
+
+  setPlayer(entity) {
+    this.player = entity;
   }
 
   update(entity, { deltaTime }, level) {
