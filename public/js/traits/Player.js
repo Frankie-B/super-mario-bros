@@ -10,7 +10,6 @@ export default class Player extends Trait {
 
     this.listen(Stomper.EVENT_STOMP, () => {
       this.score += 100;
-      console.log('Score', this.score);
     });
   }
 }

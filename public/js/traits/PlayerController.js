@@ -11,7 +11,6 @@ export default class PlayerController extends Trait {
 
     this.listen('stomp', () => {
       this.score += 100;
-      console.log('Score', this.score);
     });
   }
 
