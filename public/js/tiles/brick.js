@@ -27,6 +27,7 @@ function handleY({ entity, match, resolver, gameContext, level }) {
       goomba.pos.set(entity.pos.x, match.y1);
       level.entities.add(goomba);
     }
+
     if (entity.bounds.top < match.y2) {
       entity.obstruct(Sides.TOP, match);
     }
