@@ -24,12 +24,14 @@ async function main(canvas) {
   const camera = new Camera();
 
   const mario = createPlayer(entityFactory.mario());
+  mario.player.name = 'MARIO';
+  level.entities.add(mario);
 
   const playerEnv = createPlayerEnv(mario);
   level.entities.add(playerEnv);
 
   level.comp.layers.push(createCollisionLayer(level));
-  level.comp.layers.push(createDashboardLayer(font, playerEnv));
+  level.comp.layers.push(createDashboardLayer(font, level));
 
   const input = setupKeyboard(mario);
   input.listenTo(window);
