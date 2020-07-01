@@ -6,6 +6,7 @@ import { createPlayer, createPlayerEnv } from './player.js';
 import { setupKeyboard } from './input.js';
 import { createCollisionLayer } from './layers/collision.js';
 import { createDashboardLayer } from './layers/dashboard.js';
+import SceneRunner from './SceneRunner.js';
 
 async function main(canvas) {
   const videoContext = canvas.getContext('2d');
@@ -17,6 +18,8 @@ async function main(canvas) {
   ]);
 
   const loadLevel = await createLevelLoader(entityFactory);
+
+  const sceneRunner = new SceneRunner();
 
   const level = await loadLevel('1-2');
 
@@ -33,6 +36,8 @@ async function main(canvas) {
   const inputRouter = setupKeyboard(window);
   inputRouter.adddReceiver(mario);
 
+  sceneRunner.addScene(level);
+
   const gameContext = {
     audioContext,
     videoContext,
@@ -43,12 +48,11 @@ async function main(canvas) {
   const timer = new Timer(1 / 60);
   timer.update = function update(deltaTime) {
     gameContext.deltaTime = deltaTime;
-    level.update(gameContext);
-
-    level.draw(gameContext);
+    sceneRunner.update(gameContext);
   };
 
   timer.start();
+  sceneRunner.runNext();
 }
 
 const canvas = document.getElementById('screen');
