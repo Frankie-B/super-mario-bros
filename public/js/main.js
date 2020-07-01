@@ -7,6 +7,7 @@ import { setupKeyboard } from './input.js';
 import { createCollisionLayer } from './layers/collision.js';
 import { createDashboardLayer } from './layers/dashboard.js';
 import SceneRunner from './SceneRunner.js';
+import CompositionScene from './CompositionScene.js';
 
 async function main(canvas) {
   const videoContext = canvas.getContext('2d');
@@ -23,6 +24,9 @@ async function main(canvas) {
 
   const level = await loadLevel('1-2');
 
+  const playerProgressLayer = createDashboardLayer(font, level);
+  const dashboardLayer = createDashboardLayer(font, level);
+
   const mario = createPlayer(entityFactory.mario());
   mario.player.name = 'MARIO';
   level.entities.add(mario);
@@ -30,8 +34,12 @@ async function main(canvas) {
   const playerEnv = createPlayerEnv(mario);
   level.entities.add(playerEnv);
 
+  const waitScreen = new CompositionScene();
+  waitScreen.comp.layers.push(dashboardLayer);
+
   level.comp.layers.push(createCollisionLayer(level));
-  level.comp.layers.push(createDashboardLayer(font, level));
+  level.comp.layers.push(createDashboardLayer(dashboardLayer));
+  level.comp.layers.push(playerProgressLayer);
 
   const inputRouter = setupKeyboard(window);
   inputRouter.adddReceiver(mario);

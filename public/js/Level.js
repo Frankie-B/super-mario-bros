@@ -2,6 +2,7 @@ import Camera from './Camera.js';
 import Compositor from './Compositor.js';
 import EventEmitter from './EventEmitter.js';
 import MusicController from './MusicController.js';
+import Scene from './Scene.js';
 import EntityCollider from './EntityCollider.js';
 import TileCollider from './TileCollider.js';
 import { findPlayers } from './player.js';
@@ -12,19 +13,18 @@ function focusPlayer(level) {
   }
 }
 
-export default class Level {
+export default class Level extends Scene {
   constructor() {
+    super();
     this.name = '';
 
     this.gravity = 1500;
     this.totalTime = 0;
 
     this.camera = new Camera();
-    this.events = new EventEmitter();
 
     this.music = new MusicController();
 
-    this.comp = new Compositor();
     this.entities = new Set();
 
     this.entityCollider = new EntityCollider(this.entities);
