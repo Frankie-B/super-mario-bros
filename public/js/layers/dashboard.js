@@ -31,13 +31,6 @@ export function createDashboardLayer(font, level) {
     );
 
     font.print(
-      '+' + playerTrait.lives.toString().padStart(2, '0'),
-      context,
-      96,
-      LINE1
-    );
-
-    font.print(
       '@x' + playerTrait.coins.toString().padStart(2, '0'),
       context,
       96,
