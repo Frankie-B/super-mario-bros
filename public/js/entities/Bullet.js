@@ -1,7 +1,7 @@
 import Entity, { Sides, Trait } from '../Entity.js';
 import Killable from '../traits/Killable.js';
+import Gravity from '../traits/Gravity.js';
 import Velocity from '../traits/Velocity.js';
-import Gravity from '../traits/gravity.js';
 import { loadSpriteSheet } from '../loaders/sprite.js';
 
 export function loadBullet() {
@@ -11,7 +11,6 @@ export function loadBullet() {
 class Behavior extends Trait {
   constructor() {
     super('behavior');
-
     this.gravity = new Gravity();
   }
 
@@ -42,7 +41,7 @@ function createBulletFactory(sprite) {
     sprite.draw('bullet', context, 0, 0, this.vel.x < 0);
   }
 
-  return function createGoomba() {
+  return function createBullet() {
     const bullet = new Entity();
     bullet.size.set(16, 14);
 

@@ -1,7 +1,7 @@
 import { Trait } from '../Entity.js';
 import Stomper from '../traits/Stomper.js';
 
-const COIN_LIVES_THRESHOLD = 100;
+const COIN_LIFE_THRESHOLD = 100;
 
 export default class Player extends Trait {
   constructor() {
@@ -16,12 +16,12 @@ export default class Player extends Trait {
     });
   }
 
-  addcoins(count) {
+  addCoins(count) {
     this.coins += count;
     this.queue((entity) => entity.sounds.add('coin'));
-    while (this.coins >= COIN_LIVES_THRESHOLD) {
+    while (this.coins >= COIN_LIFE_THRESHOLD) {
       this.addLives(1);
-      this.coins -= COIN_LIVES_THRESHOLD;
+      this.coins -= COIN_LIFE_THRESHOLD;
     }
   }
 

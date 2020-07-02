@@ -2,54 +2,61 @@ import Camera from './Camera.js';
 import Compositor from './Compositor.js';
 import EventEmitter from './EventEmitter.js';
 import MusicController from './MusicController.js';
-import Scene from './Scene.js';
 import EntityCollider from './EntityCollider.js';
+import Scene from './Scene.js';
 import TileCollider from './TileCollider.js';
 import { findPlayers } from './player.js';
 
 function focusPlayer(level) {
-  for (const player of findPlayers(level)) {
-    level.camera.pos.x = Math.max(0, player.pos.x - 100);
-  }
+    for (const player of findPlayers(level)) {
+        level.camera.pos.x = Math.max(0, player.pos.x - 100);
+    }
 }
 
 export default class Level extends Scene {
-  constructor() {
-    super();
-    this.name = '';
+    static EVENT_TRIGGER = Symbol('trigger');
 
-    this.gravity = 1500;
-    this.totalTime = 0;
+    constructor() {
+        super();
 
-    this.camera = new Camera();
+        this.name = "";
 
-    this.music = new MusicController();
+        this.gravity = 1500;
+        this.totalTime = 0;
 
-    this.entities = new Set();
+        this.camera = new Camera();
 
-    this.entityCollider = new EntityCollider(this.entities);
-    this.tileCollider = new TileCollider();
-  }
+        this.music = new MusicController();
 
-  draw(gameContext) {
-    this.comp.draw(gameContext.videoContext, this.camera);
-  }
+        this.entities = new Set();
 
-  update(gameContext) {
-    this.entities.forEach((entity) => {
-      entity.update(gameContext, this);
-    });
+        this.entityCollider = new EntityCollider(this.entities);
+        this.tileCollider = new TileCollider();
+    }
 
-    this.entities.forEach((entity) => {
-      this.entityCollider.check(entity);
-    });
+    draw(gameContext) {
+        this.comp.draw(gameContext.videoContext, this.camera);
+    }
 
-    this.entities.forEach((entity) => {
-      entity.finalize();
-    });
+    update(gameContext) {
+        this.entities.forEach(entity => {
+            entity.update(gameContext, this);
+        });
 
-    focusPlayer(this);
+        this.entities.forEach(entity => {
+            this.entityCollider.check(entity);
+        });
 
-    this.totalTime += gameContext.deltaTime;
-  }
+        this.entities.forEach(entity => {
+            entity.finalize();
+        });
+
+        focusPlayer(this);
+
+        this.totalTime += gameContext.deltaTime;
+    }
+
+    pause() {
+        this.music.pause();
+    }
 }
